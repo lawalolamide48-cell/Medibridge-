@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "cardiology",
+    "name": "Cardiology",
+    "category": "Medical",
+    "icon": "❤️",
+    "specialists": 5,
+    "summary": "Heart and cardiovascular care for chest pain, blood pressure, heart rhythm concerns, and long-term heart health.",
+    "overview": "The Cardiology Department supports patients with prevention, diagnosis, treatment, and follow-up for heart and blood vessel conditions. Care includes risk assessment, ECG review, hypertension management, cholesterol planning, and support after cardiac events.",
+    "services": ["Blood pressure care", "ECG and heart rhythm review", "Chest pain assessment", "Cholesterol and prevention planning", "Heart failure follow-up"],
+    "doctors": ["Dr. Amelia Chen", "Dr. Malik Adeyemi", "Dr. Grace Okafor"],
+    "whenToVisit": ["Chest pain or tightness", "Shortness of breath with activity", "Palpitations", "High blood pressure", "Family history of heart disease"]
+  },
+  {
+    "slug": "neurology",
+    "name": "Neurology",
+    "category": "Medical",
+    "icon": "🧠",
+    "specialists": 5,
+    "summary": "Brain, nerve, and nervous system care for headaches, seizures, weakness, numbness, and memory concerns.",
+    "overview": "The Neurology Department evaluates conditions affecting the brain, spinal cord, nerves, and muscles. Patients receive structured assessment, care planning, medication review, and referrals for imaging or tests when needed.",
+    "services": ["Headache and migraine care", "Seizure evaluation", "Stroke follow-up", "Nerve pain support", "Memory and movement assessment"],
+    "doctors": ["Dr. Emily Carter", "Dr. Usman Dafodi", "Dr. Priya Shah"],
+    "whenToVisit": ["Severe or repeated headaches", "Weakness on one side", "New seizures", "Numbness or tingling", "Memory changes"]
+  },
+  {
+    "slug": "pediatrics",
+    "name": "Pediatrics",
+    "category": "Women & Children",
+    "icon": "🧒",
+    "specialists": 5,
+    "summary": "Healthcare for babies, children, and teenagers, including growth checks, vaccines, illness care, and parent guidance.",
+    "overview": "The Pediatrics Department provides child-centered care from infancy through adolescence. The team supports preventive visits, acute illness care, nutrition, development, school health, and family education.",
+    "services": ["Well-child checks", "Vaccination review", "Fever and infection care", "Growth and nutrition support", "Adolescent health"],
+    "doctors": ["Dr. Ada Bello", "Dr. Samuel Hart", "Dr. Nneka Obi"],
+    "whenToVisit": ["Fever in a child", "Persistent cough", "Poor feeding", "Delayed milestones", "Routine immunizations"]
+  },
+  {
+    "slug": "dentistry",
+    "name": "Dentistry",
+    "category": "Surgical",
+    "icon": "🦷",
+    "specialists": 5,
+    "summary": "Oral health care for tooth pain, gum problems, checkups, cleaning, fillings, and dental procedures.",
+    "overview": "The Dentistry Department helps patients protect oral health through preventive care, diagnosis, treatment, and education. Services support comfort, function, and long-term dental wellness.",
+    "services": ["Dental checkups", "Cleaning and scaling", "Tooth pain assessment", "Fillings", "Gum care"],
+    "doctors": ["Dr. Fatima Yusuf", "Dr. Daniel Reed", "Dr. Chika Eze"],
+    "whenToVisit": ["Toothache", "Bleeding gums", "Broken tooth", "Bad breath that persists", "Routine dental cleaning"]
+  },
+  {
+    "slug": "ophthalmology",
+    "name": "Ophthalmology",
+    "category": "Diagnostics",
+    "icon": "👁️",
+    "specialists": 5,
+    "summary": "Eye and vision care for blurred vision, eye pain, infections, glasses checks, and chronic eye conditions.",
+    "overview": "The Ophthalmology Department provides medical eye care, vision assessment, and monitoring for eye conditions. Patients can receive examination, treatment plans, and specialist referral when required.",
+    "services": ["Vision checks", "Eye infection care", "Glaucoma screening", "Diabetic eye review", "Dry eye support"],
+    "doctors": ["Dr. Victor Mensah", "Dr. Helen Brooks", "Dr. Amina Cole"],
+    "whenToVisit": ["Blurred vision", "Eye pain", "Red eyes", "Sudden vision changes", "Diabetes-related eye checks"]
+  },
+  {
+    "slug": "orthopedics",
+    "name": "Orthopedics",
+    "category": "Surgical",
+    "icon": "🦴",
+    "specialists": 5,
+    "summary": "Bone, joint, muscle, and mobility care for pain, injury, arthritis, fractures, and rehabilitation.",
+    "overview": "The Orthopedics Department manages musculoskeletal concerns with assessment, imaging referral, treatment planning, and recovery support. Care focuses on movement, pain control, and function.",
+    "services": ["Joint pain care", "Fracture follow-up", "Sports injury assessment", "Arthritis management", "Rehabilitation planning"],
+    "doctors": ["Dr. James Wilson", "Dr. Ifeoma Nwosu", "Dr. Kareem Ali"],
+    "whenToVisit": ["Joint swelling", "Back or neck pain", "Suspected fracture", "Sports injury", "Reduced movement"]
+  },
+  {
+    "slug": "ob-gyn",
+    "name": "OB-GYN",
+    "category": "Women & Children",
+    "icon": "🤰",
+    "specialists": 5,
+    "summary": "Women's reproductive health, pregnancy care, menstrual concerns, contraception guidance, and preventive screening.",
+    "overview": "The OB-GYN Department supports women through preventive visits, pregnancy, reproductive health needs, and gynecological concerns. Care is confidential, respectful, and coordinated.",
+    "services": ["Antenatal care", "Menstrual health", "Family planning", "Cervical screening", "Pelvic pain assessment"],
+    "doctors": ["Dr. Maria Santos", "Dr. Blessing Ahmed", "Dr. Rachel Kim"],
+    "whenToVisit": ["Pregnancy care", "Irregular periods", "Pelvic pain", "Contraception questions", "Routine women's health screening"]
+  },
+  {
+    "slug": "general-practice",
+    "name": "General Practice",
+    "category": "Medical",
+    "icon": "🩺",
+    "specialists": 5,
+    "summary": "Primary care for everyday health concerns, prevention, chronic conditions, referrals, and care coordination.",
+    "overview": "General Practice is the first stop for most health needs. The team handles common illnesses, preventive care, chronic disease follow-up, health education, and referrals to specialists.",
+    "services": ["General consultation", "Preventive checkups", "Diabetes and hypertension follow-up", "Minor illness care", "Specialist referrals"],
+    "doctors": ["Dr. Sarah Johnson", "Dr. Tunde Phillips", "Dr. Hannah Lee"],
+    "whenToVisit": ["New symptoms", "Routine health checks", "Medication review", "Chronic condition follow-up", "Referral guidance"]
+  },
+  {
+    "slug": "mental-health",
+    "name": "Mental Health",
+    "category": "Mental Health",
+    "icon": "🧠",
+    "specialists": 4,
+    "summary": "Support for stress, anxiety, depression, sleep concerns, emotional wellbeing, and care planning.",
+    "overview": "The Mental Health Department provides compassionate support for emotional and psychological wellbeing. Care may include assessment, counseling referral, coping plans, medication review, and follow-up.",
+    "services": ["Stress and anxiety support", "Depression screening", "Sleep guidance", "Counseling referral", "Crisis care planning"],
+    "doctors": ["Dr. Nora Evans", "Dr. Ibrahim Salisu", "Dr. Lara Moore"],
+    "whenToVisit": ["Persistent sadness", "Panic attacks", "Sleep problems", "High stress", "Thoughts of self-harm or crisis"]
+  },
+  {
+    "slug": "emergency",
+    "name": "Emergency Care",
+    "category": "Emergency",
+    "icon": "🚑",
+    "specialists": 8,
+    "summary": "Urgent care for serious symptoms, injuries, breathing problems, severe pain, and sudden changes in health.",
+    "overview": "Emergency Care is for conditions that may require immediate medical attention. MediBridge helps patients understand warning signs and connect with urgent services quickly.",
+    "services": ["Urgent triage", "Injury assessment", "Severe pain review", "Breathing difficulty response", "Rapid referral"],
+    "doctors": ["Emergency Care Team", "Dr. Peter Stone", "Dr. Ngozi Umeh"],
+    "whenToVisit": ["Chest pain", "Trouble breathing", "Severe bleeding", "Loss of consciousness", "Stroke warning signs"]
+  }
+]

@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediBridge — Patient Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/medibridge-enhancements.css" />
+  <style>
+    :root {
+      --green: #1B4D3E;
+      --green-dark: #133829;
+      --green-mid: #2D6B58;
+      --green-light: #E8F5F0;
+      --green-pale: #F0F9F6;
+      --gold: #F5A623;
+      --red: #DC2626;
+      --red-light: #FEF2F2;
+      --gray: #F7F8F8;
+      --gray-mid: #E5E7EB;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #D1D5DB;
+      --white: #ffffff;
+      --sidebar-w: 220px;
+      --header-h: 64px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+      background: var(--gray);
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    input, textarea { font-family: inherit; }
+
+    /* ── LAYOUT ── */
+    .app { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--white);
+      border-right: 1px solid var(--gray-mid);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      transition: transform 300ms ease;
+    }
+    .sidebar-logo {
+      padding: 20px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green);
+      border-bottom: 1px solid var(--gray-mid);
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-icon svg { width: 18px; height: 18px; fill: white; }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 160ms;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover { background: var(--gray); color: var(--text); }
+    .nav-item.active { background: var(--green); color: white; font-weight: 600; }
+    .nav-item .nav-icon { font-size: 17px; flex-shrink: 0; }
+
+    .sidebar-logout {
+      padding: 16px 12px;
+      border-top: 1px solid var(--gray-mid);
+    }
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: 8px;
+      width: 100%;
+      transition: background 160ms;
+    }
+    .logout-btn:hover { background: var(--red-light); }
+
+    /* ── MAIN AREA ── */
+    .main-area {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: var(--header-h);
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      gap: 16px;
+    }
+    .topbar-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .topbar-search {
+      flex: 1;
+      max-width: 420px;
+      position: relative;
+    }
+    .topbar-search input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      background: var(--gray);
+      transition: border-color 160ms;
+    }
+    .topbar-search input:focus { border-color: var(--green); background: white; }
+    .search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .notif-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+    }
+    .notif-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 160ms;
+    }
+    .user-chip:hover { background: var(--gray); }
+    .user-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--green-light);
+    }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .user-avatar-placeholder {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .user-info { line-height: 1.3; }
+    .user-name { font-size: 13px; font-weight: 700; }
+    .user-email { font-size: 11px; color: var(--muted); }
+    .hamburger-dash {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .hamburger-dash span { width: 18px; height: 2px; background: var(--text); display: block; border-radius: 2px; }
+
+    /* ── PAGE CONTENT ── */
+    .page-content { display: none; padding: 28px; flex: 1; }
+    .page-content.active { display: block; }
+
+    /* ── DASHBOARD PAGE ── */
+    .welcome-banner {
+      background: var(--green);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+    .welcome-banner h2 { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .welcome-banner p { font-size: 14px; color: rgba(255,255,255,0.75); }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px;
+    }
+    .section-label {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+      margin-left: 8px;
+    }
+
+    /* Appointment card */
+    .appt-card {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .appt-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .appt-doctor-info { display: flex; align-items: center; gap: 14px; }
+    .doctor-avatar {
+      width: 56px; height: 56px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--green-light);
+      flex-shrink: 0;
+    }
+    .doctor-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .doctor-avatar-placeholder {
+      width: 56px; height: 56px;
+      border-radius: 10px;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .doctor-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+    .doctor-dept { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .appt-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .appt-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .status-confirmed { background: var(--green-light); color: var(--green); }
+    .status-completed { background: #EFF6FF; color: #1D4ED8; }
+    .status-cancelled { background: var(--red-light); color: var(--red); }
+    .appt-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-sm {
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .btn-green { background: var(--green); color: white; }
+    .btn-green:hover { background: var(--green-dark); }
+    .btn-outline { background: white; color: var(--text); border: 1.5px solid var(--border); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-red { background: none; border: none; color: var(--red); font-size: 13px; font-weight: 600; padding: 9px 4px; cursor: pointer; }
+
+    /* Quick Actions */
+    .quick-actions {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .quick-action-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 160ms;
+      background: white;
+      width: 100%;
+      text-align: left;
+    }
+    .quick-action-item:last-child { margin-bottom: 0; }
+    .quick-action-item:hover { background: var(--green-pale); border-color: var(--green); }
+    .qa-icon {
+      width: 36px; height: 36px;
+      background: var(--green-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .qa-label { font-size: 14px; font-weight: 600; color: var(--text); }
+
+    /* Recent Activities */
+    .activity-list { background: white; border: 1px solid var(--gray-mid); border-radius: 12px; overflow: hidden; }
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gray-mid);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 36px; height: 36px;
+      background: var(--gray);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .activity-text { flex: 1; }
+    .activity-title { font-size: 14px; font-weight: 600; }
+    .activity-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .activity-time { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+
+    /* ── APPOINTMENTS PAGE ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .page-title { font-size: 22px; font-weight: 800; }
+    .page-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .btn-book {
+      padding: 10px 20px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 160ms;
+    }
+    .btn-book:hover { background: var(--green-dark); }
+
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 7px;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .tab-btn.active { background: var(--green); color: white; font-weight: 600; }
+
+    /* ── MEDICAL RECORDS ── */
+    .search-filter-row {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 12px;
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 14px 10px 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-wrap input:focus { border-color: var(--green); }
+    .filter-select {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      color: var(--muted);
+      background: white;
+      cursor: pointer;
+    }
+    .record-card {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .record-icon {
+      width: 44px; height: 44px;
+      background: var(--gray);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .record-info { flex: 1; }
+    .record-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .record-meta { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .record-actions { display: flex; gap: 8px; }
+    .btn-view { padding: 8px 16px; background: var(--green); color: white; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-pdf { padding: 8px 16px; background: white; color: var(--text); border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .btn-pdf:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── MESSAGES ── */
+    .messages-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 0;
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      overflow: hidden;
+      height: calc(100vh - 180px);
+      min-height: 500px;
+    }
+    .msg-sidebar {
+      border-right: 1px solid var(--gray-mid);
+      display: flex;
+      flex-direction: column;
+    }
+    .msg-search { padding: 14px; border-bottom: 1px solid var(--gray-mid); }
+    .msg-search input {
+      width: 100%;
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+    .msg-list { overflow-y: auto; flex: 1; }
+    .msg-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray-mid);
+      cursor: pointer;
+      transition: background 160ms;
+    }
+    .msg-item:hover, .msg-item.active { background: var(--green-pale); }
+    .msg-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--green-light);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .msg-preview { flex: 1; min-width: 0; }
+    .msg-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .msg-snippet { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .msg-time { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+
+    .chat-area { display: flex; flex-direction: column; }
+    .chat-header-bar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--gray-mid);
+      font-size: 15px;
+      font-weight: 700;
+      background: white;
+    }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+    .chat-bubble-row { display: flex; }
+    .chat-bubble-row.user { justify-content: flex-end; }
+    .chat-bubble {
+      max-width: 65%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .chat-bubble.doctor { background: var(--green-light); color: var(--text); border-radius: 4px 12px 12px 12px; }
+    .chat-bubble.user-msg { background: var(--green); color: white; border-radius: 12px 4px 12px 12px; }
+    .bubble-time { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .chat-input-bar {
+      padding: 14px 16px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .chat-type-input {
+      flex: 1;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .chat-type-input:focus { border-color: var(--green); }
+    .chat-send-btn {
+      width: 38px; height: 38px;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── AI SUPPORT ── */
+    .ai-support-box {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 860px;
+    }
+    .ai-box-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ai-box-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; }
+    .ai-bot-icon {
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .btn-new-chat {
+      padding: 7px 14px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .ai-box-messages { padding: 20px; min-height: 300px; max-height: 420px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+    .ai-row { display: flex; gap: 10px; align-items: flex-start; }
+    .ai-msg-bubble { background: var(--green-light); color: var(--text); padding: 12px 16px; border-radius: 4px 12px 12px 12px; font-size: 14px; line-height: 1.6; max-width: 80%; }
+    .user-msg-bubble { background: var(--green); color: white; padding: 12px 16px; border-radius: 12px 4px 12px 12px; font-size: 14px; line-height: 1.6; max-width: 80%; margin-left: auto; }
+    .ai-chips-row { padding: 14px 20px; display: flex; flex-wrap: wrap; gap: 8px; border-top: 1px solid var(--gray-mid); }
+    .ai-chip-btn { padding: 7px 14px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; background: white; cursor: pointer; transition: all 160ms; }
+    .ai-chip-btn:hover { background: var(--green); color: white; border-color: var(--green); }
+    .ai-input-section { padding: 14px 16px; border-top: 1px solid var(--gray-mid); }
+    .ai-dash-input { width: 100%; padding: 11px 48px 11px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; position: relative; }
+    .ai-dash-input:focus { border-color: var(--green); }
+    .ai-input-wrap { position: relative; }
+    .ai-dash-send { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: var(--green); border: none; border-radius: 6px; width: 30px; height: 30px; color: white; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .ai-disclaimer-dash { text-align: center; font-size: 12px; color: var(--muted); padding: 10px 16px; border-top: 1px solid var(--gray-mid); }
+
+    /* ── DEPARTMENTS (DASH) ── */
+    .dept-grid-dash {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .dept-dash-card {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .dept-dash-card:hover { border-color: var(--green); box-shadow: 0 4px 16px rgba(27,77,62,0.1); transform: translateY(-2px); }
+    .dept-dash-icon { font-size: 28px; margin-bottom: 10px; }
+    .dept-dash-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .dept-dash-count { font-size: 12px; color: var(--green); font-weight: 600; }
+
+    /* ── ACCOUNT SETTINGS ── */
+    .settings-card {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 20px;
+      max-width: 640px;
+    }
+    .settings-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-mid); }
+    .settings-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .form-input {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 160ms;
+    }
+    .form-input:focus { border-color: var(--green); }
+    .btn-save { padding: 10px 24px; background: var(--green); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-save:hover { background: var(--green-dark); }
+
+    /* ── BOOK APPOINTMENT MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .modal-step { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+      line-height: 1;
+    }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      gap: 12px;
+    }
+    .btn-back { flex: 1; padding: 11px; background: white; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-next { flex: 2; padding: 11px; background: var(--green); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-next:hover { background: var(--green-dark); }
+
+    /* Modal step content */
+    .modal-step-content { display: none; }
+    .modal-step-content.active { display: block; }
+    .modal-label { font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+    .dept-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .dept-select-item {
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 160ms;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .dept-select-item:hover, .dept-select-item.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 600; }
+    .dept-select-icon { font-size: 22px; margin-bottom: 6px; }
+
+    .doctor-select-list { display: flex; flex-direction: column; gap: 10px; }
+    .doctor-select-item {
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 160ms;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .doctor-select-item:hover, .doctor-select-item.selected { border-color: var(--green); background: var(--green-pale); }
+    .doctor-select-avatar {
+      width: 48px; height: 48px;
+      border-radius: 8px;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .doctor-select-name { font-size: 14px; font-weight: 700; }
+    .doctor-select-dept { font-size: 12px; color: var(--muted); }
+    .doctor-avail { font-size: 12px; font-weight: 600; }
+    .avail-yes { color: var(--green); }
+    .avail-no { color: var(--red); }
+
+    .time-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .time-slot {
+      padding: 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 160ms;
+      background: white;
+    }
+    .time-slot:hover, .time-slot.selected { border-color: var(--green); background: var(--green); color: white; }
+    .time-slot.unavailable { background: var(--gray); color: var(--muted); cursor: not-allowed; border-color: var(--gray-mid); }
+
+    .confirm-summary { background: var(--gray); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+    .confirm-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--gray-mid); font-size: 14px; }
+    .confirm-row:last-child { border-bottom: none; }
+    .confirm-label { color: var(--muted); }
+    .confirm-value { font-weight: 600; }
+
+    /* ── APPOINTMENT DETAIL MODAL ── */
+    .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-mid); font-size: 14px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--muted); }
+    .detail-value { font-weight: 600; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .dash-grid { grid-template-columns: 1fr; }
+      .dept-grid-dash { grid-template-columns: repeat(2, 1fr); }
+      .messages-layout { grid-template-columns: 1fr; height: auto; min-height: 600px; }
+      .msg-sidebar { display: flex; border-right: none; border-bottom: 1px solid var(--gray-mid); max-height: 200px; }
+      .chat-messages { min-height: 300px; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); z-index: 200; }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.15); }
+      .main-area { margin-left: 0; }
+      .hamburger-dash { display: flex; }
+      .topbar-search { display: none; }
+      .topbar-title { display: block; font-size: 16px; }
+      .page-content { padding: 16px; }
+      .settings-row { grid-template-columns: 1fr; }
+      .dept-grid-dash { grid-template-columns: repeat(2, 1fr); }
+      .search-filter-row { grid-template-columns: 1fr; }
+      .appt-card-header { flex-direction: column; gap: 10px; }
+      .welcome-banner { padding: 18px 20px; }
+      .welcome-banner h2 { font-size: 18px; }
+      .tab-bar { width: 100%; }
+      .tab-btn { flex: 1; padding: 8px 10px; font-size: 13px; }
+      .page-title { font-size: 18px; }
+      .topbar { padding: 0 16px; gap: 10px; }
+      .user-email { display: none; }
+    }
+    @media (max-width: 480px) {
+      .dept-select-grid { grid-template-columns: 1fr; }
+      .time-slots { grid-template-columns: repeat(2, 1fr); }
+      .appt-actions { flex-wrap: wrap; gap: 8px; }
+      .record-card { flex-direction: column; align-items: flex-start; }
+      .record-actions { width: 100%; justify-content: flex-start; }
+      .dept-grid-dash { grid-template-columns: repeat(2, 1fr); }
+      .quick-action-item { padding: 10px 12px; }
+      .modal { margin: 0 8px; }
+      .settings-card { padding: 20px 16px; }
+      .topbar { height: 56px; }
+      .user-info { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg></div>
+      MediBridge
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="switchPage('dashboard')" data-page="dashboard">
+        <span class="nav-icon">⊞</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="switchPage('appointments')" data-page="appointments">
+        <span class="nav-icon">📅</span> Appointments
+      </button>
+      <button class="nav-item" onclick="switchPage('departments')" data-page="departments">
+        <span class="nav-icon">🏥</span> Departments
+      </button>
+      <button class="nav-item" onclick="switchPage('records')" data-page="records">
+        <span class="nav-icon">📋</span> Medical Records
+      </button>
+      <button class="nav-item" onclick="switchPage('messages')" data-page="messages">
+        <span class="nav-icon">💬</span> Messages
+      </button>
+      <button class="nav-item" onclick="switchPage('ai')" data-page="ai">
+        <span class="nav-icon">✦</span> AI Support
+      </button>
+      <button class="nav-item" onclick="switchPage('settings')" data-page="settings">
+        <span class="nav-icon">⚙️</span> Account Settings
+      </button>
+    </nav>
+    <div class="sidebar-logout">
+      <button class="logout-btn" onclick="window.location.href='index.html'">
+        <span>↪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN AREA ── -->
+  <div class="main-area">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <button class="hamburger-dash" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search condition, department..." />
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+        <div class="user-chip">
+          <div class="user-avatar-placeholder">SM</div>
+          <div class="user-info">
+            <div class="user-name">Sarah Martins</div>
+            <div class="user-email">Sarahmartins32@gmail.com</div>
+          </div>
+          <span style="color:var(--muted);font-size:12px;">▾</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ════ DASHBOARD ════ -->
+    <div class="page-content active" id="page-dashboard">
+      <div class="welcome-banner">
+        <h2>Hello, Sarah Martins 👋</h2>
+        <p>Welcome to MediBridge.</p>
+      </div>
+      <div class="dash-grid">
+        <div>
+          <p class="section-label">Upcoming Appointment</p>
+          <div class="appt-card">
+            <div class="appt-card-header">
+              <div class="appt-doctor-info">
+                <div class="doctor-avatar-placeholder">👨‍⚕️</div>
+                <div>
+                  <div class="doctor-name">Dr. Amelia Chen</div>
+                  <div class="doctor-dept">Cardiology Department</div>
+                  <div class="appt-meta">
+                    <span class="appt-meta-item">📅 Thursday, July 2, 2026</span>
+                    <span class="appt-meta-item">🕐 3:00 PM</span>
+                  </div>
+                </div>
+              </div>
+              <span class="status-badge status-confirmed">Confirmed</span>
+            </div>
+            <div class="appt-actions">
+              <button class="btn-sm btn-green" onclick="openDetailModal()">View Details</button>
+              <button class="btn-sm btn-outline">Reshedule</button>
+              <button class="btn-red">Cancel</button>
+            </div>
+          </div>
+
+          <p class="section-label" style="margin-top:24px;">Recent Activities</p>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon">📅</div>
+              <div class="activity-text">
+                <div class="activity-title">Appointment confirmed</div>
+                <div class="activity-desc">Cardiology with Dr. Amelia Chen — Thursday, July 2, 2026</div>
+              </div>
+              <div class="activity-time">2hr Ago</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">🔄</div>
+              <div class="activity-text">
+                <div class="activity-title">Appointment rescheduled</div>
+                <div class="activity-desc">Neurology visit moved to August 18, 2026</div>
+              </div>
+              <div class="activity-time">2hr Ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="section-label">Quick Actions</p>
+          <div class="quick-actions">
+            <button class="quick-action-item" onclick="openBookModal()">
+              <div class="qa-icon">📅</div>
+              <span class="qa-label">Book Appointment</span>
+            </button>
+            <button class="quick-action-item" onclick="switchPage('ai')" data-page="ai">
+              <div class="qa-icon">✦</div>
+              <span class="qa-label">Chat With AI</span>
+            </button>
+            <button class="quick-action-item" onclick="switchPage('records')" data-page="records">
+              <div class="qa-icon">📋</div>
+              <span class="qa-label">Medical Records</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ APPOINTMENTS ════ -->
+    <div class="page-content" id="page-appointments">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Appointments</div>
+          <div class="page-desc">Manage your visits and continue your care.</div>
+        </div>
+        <button class="btn-book" onclick="openBookModal()">Book New Appointment</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-upcoming')">Upcoming (1)</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-completed')">Completed (1)</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-cancelled')">Cancel</button>
+      </div>
+
+      <div id="tab-upcoming">
+        <div class="appt-card">
+          <div class="appt-card-header">
+            <div class="appt-doctor-info">
+              <div class="doctor-avatar-placeholder">👨‍⚕️</div>
+              <div>
+                <div class="doctor-name">Dr. Amelia Chen</div>
+                <div class="doctor-dept">Cardiology Department</div>
+                <div class="appt-meta">
+                  <span class="appt-meta-item">📅 Thursday, July 2, 2026</span>
+                  <span class="appt-meta-item">🕐 3:00 PM</span>
+                </div>
+              </div>
+            </div>
+            <span class="status-badge status-confirmed">Confirmed</span>
+          </div>
+          <div class="appt-actions">
+            <button class="btn-sm btn-green" onclick="openDetailModal()">View Details</button>
+            <button class="btn-sm btn-outline">Reshedule</button>
+            <button class="btn-sm btn-outline" onclick="switchPage('messages')" data-page="messages">Message</button>
+            <button class="btn-red">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-completed" style="display:none;">
+        <div class="appt-card">
+          <div class="appt-card-header">
+            <div class="appt-doctor-info">
+              <div class="doctor-avatar-placeholder">👩‍⚕️</div>
+              <div>
+                <div class="doctor-name">Dr. Emily Carter</div>
+                <div class="doctor-dept">Neurology Department</div>
+                <div class="appt-meta">
+                  <span class="appt-meta-item">📅 Monday, June 10, 2026</span>
+                  <span class="appt-meta-item">🕐 10:00 AM</span>
+                </div>
+              </div>
+            </div>
+            <span class="status-badge status-completed">Completed</span>
+          </div>
+          <div class="appt-actions">
+            <button class="btn-sm btn-green" onclick="openDetailModal()">View Details</button>
+            <button class="btn-sm btn-outline">Book Again</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-cancelled" style="display:none;">
+        <div style="text-align:center;padding:48px;color:var(--muted);">
+          <div style="font-size:40px;margin-bottom:12px;">📭</div>
+          <div style="font-size:15px;font-weight:600;">No cancelled appointments</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ DEPARTMENTS ════ -->
+    <div class="page-content" id="page-departments">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Departments</div>
+          <div class="page-desc">Browse all available hospital departments.</div>
+        </div>
+        <button class="btn-book" onclick="openBookModal()">Book Appointment</button>
+      </div>
+      <div class="dept-grid-dash">
+        <div class="dept-dash-card"><div class="dept-dash-icon">❤️</div><div class="dept-dash-name">Cardiology</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🧠</div><div class="dept-dash-name">Neurology</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🧒</div><div class="dept-dash-name">Pediatrics</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🦷</div><div class="dept-dash-name">Dentistry</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🦴</div><div class="dept-dash-name">Orthopedics</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🩺</div><div class="dept-dash-name">General Practice</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">🤰</div><div class="dept-dash-name">OB-GYN</div><div class="dept-dash-count">5 Specialists</div></div>
+        <div class="dept-dash-card"><div class="dept-dash-icon">👁️</div><div class="dept-dash-name">Ophthalmology</div><div class="dept-dash-count">5 Specialists</div></div>
+      </div>
+    </div>
+
+    <!-- ════ MEDICAL RECORDS ════ -->
+    <div class="page-content" id="page-records">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Medical Records</div>
+          <div class="page-desc">Your complete history of hospital visits and consultation summaries.</div>
+        </div>
+      </div>
+      <div class="search-filter-row">
+        <div class="search-wrap">
+          <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);">🔍</span>
+          <input style="padding-left:36px;" type="text" placeholder='Search by doctor, department, or date (e.g. "cardiology", "May 2026")' />
+        </div>
+        <select class="filter-select"><option>All</option><option>Cardiology</option><option>Neurology</option><option>Pediatrics</option></select>
+      </div>
+      <div class="record-card">
+        <div class="record-icon">📅</div>
+        <div class="record-info">
+          <div class="record-title">Cardiology Consultation Notes</div>
+          <div class="record-meta">👨‍⚕️ Dr. Amelia Chen · Cardiology Department &nbsp;|&nbsp; 📅 Thursday, July 2, 2026</div>
+        </div>
+        <div class="record-actions">
+          <button class="btn-view">View</button>
+          <button class="btn-pdf">⬇ PDF</button>
+        </div>
+      </div>
+      <div class="record-card">
+        <div class="record-icon">📅</div>
+        <div class="record-info">
+          <div class="record-title">Neurology Consultation Notes</div>
+          <div class="record-meta">👩‍⚕️ Dr. Emily Carter · Neurology Department &nbsp;|&nbsp; 📅 Thursday, July 2, 2026</div>
+        </div>
+        <div class="record-actions">
+          <button class="btn-view">View</button>
+          <button class="btn-pdf">⬇ PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ MESSAGES ════ -->
+    <div class="page-content" id="page-messages">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Messages</div>
+          <div class="page-desc">Conversations with your doctors and care team</div>
+        </div>
+      </div>
+      <div class="messages-layout">
+        <div class="msg-sidebar">
+          <div class="msg-search">
+            <input type="text" placeholder="Search conversation" />
+          </div>
+          <div class="msg-list">
+            <div class="msg-item active">
+              <div class="msg-avatar">👨‍⚕️</div>
+              <div class="msg-preview">
+                <div class="msg-name">Dr. Amelia Chen</div>
+                <div class="msg-snippet">Good afternoon doctor, I have my appoint...</div>
+              </div>
+              <div class="msg-time">3:00 AM</div>
+            </div>
+            <div class="msg-item">
+              <div class="msg-avatar">👨🏾‍⚕️</div>
+              <div class="msg-preview">
+                <div class="msg-name">Dr. Usman Dafodi</div>
+                <div class="msg-snippet">Good afternoon doctor, I have my appoint...</div>
+              </div>
+              <div class="msg-time">3:00 AM</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-area">
+          <div class="chat-header-bar">Dr. Amelia Chen</div>
+          <div class="chat-messages" id="dash-messages">
+            <div class="chat-bubble-row user">
+              <div>
+                <div class="chat-bubble user-msg">Good afternoon doctor, I have my appointment tomorrow. Is there anything I should prepare before coming?</div>
+                <div class="bubble-time" style="text-align:right;">3:00 AM</div>
+              </div>
+            </div>
+            <div class="chat-bubble-row">
+              <div>
+                <div class="chat-bubble doctor">Good afternoon Sarah. Yes, please avoid food and caffeine for at least 8 hours before your appointment.</div>
+                <div class="bubble-time">3:10 AM</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input class="chat-type-input" id="dash-msg-input" placeholder="Type your Message..." onkeydown="if(event.key==='Enter') sendDashMsg()" />
+            <button class="chat-send-btn" onclick="sendDashMsg()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ AI SUPPORT ════ -->
+    <div class="page-content" id="page-ai">
+      <div class="page-header">
+        <div>
+          <div class="page-title">AI Support</div>
+          <div class="page-desc">Describe your symptoms or ask any hospital-related question. The AI will guide you step-by-step.</div>
+        </div>
+      </div>
+      <div class="ai-support-box">
+        <div class="ai-box-header">
+          <div class="ai-box-title"><div class="ai-bot-icon">🏥</div> MediBridge AI</div>
+          <button class="btn-new-chat" onclick="clearDashAi()">New Chat</button>
+        </div>
+        <div class="ai-box-messages" id="dash-ai-messages">
+          <div class="ai-row">
+            <div class="ai-bot-icon" style="width:32px;height:32px;flex-shrink:0;">🏥</div>
+            <div class="ai-msg-bubble">Hi 👋 I'm MediBidge AI. I can help with medication questions, appointment prep, and general health information. What's on your mind today?</div>
+          </div>
+        </div>
+        <div class="ai-chips-row">
+          <button class="ai-chip-btn" onclick="sendDashChip(this)">I don't feel well</button>
+          <button class="ai-chip-btn" onclick="sendDashChip(this)">Medication information</button>
+          <button class="ai-chip-btn" onclick="sendDashChip(this)">Appointment help</button>
+          <button class="ai-chip-btn" onclick="sendDashChip(this)">Understand my lab results</button>
+        </div>
+        <div class="ai-input-section">
+          <div class="ai-input-wrap">
+            <input class="ai-dash-input" id="dash-ai-input" placeholder="Type your question..." onkeydown="if(event.key==='Enter') sendDashAiMsg()" />
+            <button class="ai-dash-send" onclick="sendDashAiMsg()">➤</button>
+          </div>
+        </div>
+        <div class="ai-disclaimer-dash">ⓘ This AI provides informational guidance and does not replace professional medical diagnosis.</div>
+      </div>
+    </div>
+
+    <!-- ════ ACCOUNT SETTINGS ════ -->
+    <div class="page-content" id="page-settings">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Account Settings</div>
+          <div class="page-desc">Manage your profile and preferences.</div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <h3>Personal Information</h3>
+        <div class="settings-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" value="Sarah" /></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" value="Martins" /></div>
+        </div>
+        <div class="settings-row">
+          <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" value="Sarahmartins32@gmail.com" /></div>
+          <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" value="+234 900 000 0000" /></div>
+        </div>
+        <div class="settings-row">
+          <div class="form-group"><label class="form-label">Date of Birth</label><input class="form-input" type="date" value="1990-05-14" /></div>
+          <div class="form-group"><label class="form-label">Patient ID</label><input class="form-input" value="MB-2026-00421" readonly style="background:var(--gray);" /></div>
+        </div>
+        <button class="btn-save">Save Changes</button>
+      </div>
+      <div class="settings-card">
+        <h3>Change Password</h3>
+        <div class="form-group" style="margin-bottom:16px;"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="Enter current password" /></div>
+        <div class="settings-row">
+          <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" placeholder="New password" /></div>
+          <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-input" type="password" placeholder="Confirm password" /></div>
+        </div>
+        <button class="btn-save">Update Password</button>
+      </div>
+    </div>
+
+  </div><!-- end main-area -->
+</div><!-- end app -->
+
+<!-- ════ BOOK APPOINTMENT MODAL ════ -->
+<div class="modal-overlay" id="book-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Book Appointment</div>
+        <div class="modal-step" id="modal-step-label">Step 1 of 5</div>
+      </div>
+      <button class="modal-close" onclick="closeBookModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Step 1: Department -->
+      <div class="modal-step-content active" id="modal-s1">
+        <p class="modal-label">Select a Department</p>
+        <div class="dept-select-grid">
+          <div class="dept-select-item selected" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">❤️</div>Cardiology</div>
+          <div class="dept-select-item" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">🧠</div>Neurology</div>
+          <div class="dept-select-item" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">🧒</div>Pediatrics</div>
+          <div class="dept-select-item" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">🦷</div>Dentistry</div>
+          <div class="dept-select-item" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">🦴</div>Orthopedics</div>
+          <div class="dept-select-item" onclick="selectItem(this,'.dept-select-item')"><div class="dept-select-icon">🩺</div>General Practice</div>
+        </div>
+      </div>
+      <!-- Step 2: Doctor -->
+      <div class="modal-step-content" id="modal-s2">
+        <p class="modal-label">Select a Doctor <span style="float:right;color:var(--muted);font-size:12px;font-weight:400;">Cardiology · 8 available</span></p>
+        <div class="doctor-select-list">
+          <div class="doctor-select-item selected" onclick="selectItem(this,'.doctor-select-item')">
+            <div class="doctor-select-avatar">👨‍⚕️</div>
+            <div style="flex:1;">
+              <div class="doctor-select-name">Dr. Amelia Chen</div>
+              <div class="doctor-select-dept">Cardiology Department · 14 Yrs Exp.</div>
+              <div class="doctor-avail avail-yes">● Available</div>
+            </div>
+            <button class="btn-sm btn-outline" style="font-size:12px;padding:6px 12px;">View Profile</button>
+          </div>
+          <div class="doctor-select-item" onclick="selectItem(this,'.doctor-select-item')">
+            <div class="doctor-select-avatar">👩‍⚕️</div>
+            <div style="flex:1;">
+              <div class="doctor-select-name">Dr. Blessing Friday</div>
+              <div class="doctor-select-dept">Cardiology Department · 10 Yrs Exp.</div>
+              <div class="doctor-avail avail-no">● Unavailable</div>
+            </div>
+            <button class="btn-sm btn-outline" style="font-size:12px;padding:6px 12px;">View Profile</button>
+          </div>
+        </div>
+      </div>
+      <!-- Step 3: Date & Time -->
+      <div class="modal-step-content" id="modal-s3">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Select Date</label>
+          <input class="form-input" type="date" min="2026-06-25" />
+        </div>
+        <label class="modal-label">Select Time</label>
+        <div class="time-slots">
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">9:00 AM</button>
+          <button class="time-slot selected" onclick="selectItem(this,'.time-slot')">10:00 AM</button>
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">11:00 AM</button>
+          <button class="time-slot unavailable" disabled>12:00 PM</button>
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">2:00 PM</button>
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">3:00 PM</button>
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">4:00 PM</button>
+          <button class="time-slot unavailable" disabled>5:00 PM</button>
+          <button class="time-slot" onclick="selectItem(this,'.time-slot')">6:00 PM</button>
+        </div>
+      </div>
+      <!-- Step 4: Reason -->
+      <div class="modal-step-content" id="modal-s4">
+        <div class="form-group">
+          <label class="form-label">Reason for Visit</label>
+          <input class="form-input" type="text" placeholder="e.g. Chest pain, routine checkup" style="margin-bottom:14px;" />
+          <label class="form-label">Additional Notes (optional)</label>
+          <textarea class="form-input" rows="4" placeholder="Any additional information for your doctor..." style="resize:vertical;"></textarea>
+        </div>
+      </div>
+      <!-- Step 5: Confirm -->
+      <div class="modal-step-content" id="modal-s5">
+        <p class="modal-label" style="margin-bottom:14px;">Confirm Appointment Details</p>
+        <div class="confirm-summary">
+          <div class="confirm-row"><span class="confirm-label">Department</span><span class="confirm-value">Cardiology</span></div>
+          <div class="confirm-row"><span class="confirm-label">Doctor</span><span class="confirm-value">Dr. Amelia Chen</span></div>
+          <div class="confirm-row"><span class="confirm-label">Date</span><span class="confirm-value">Wednesday, July 20</span></div>
+          <div class="confirm-row"><span class="confirm-label">Time</span><span class="confirm-value">10:00 AM</span></div>
+          <div class="confirm-row"><span class="confirm-label">Reason</span><span class="confirm-value">Chest Pain</span></div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">By confirming, you agree to attend the appointment or cancel at least 24 hours in advance.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-back" id="modal-back" onclick="modalBack()" style="display:none;">Back</button>
+      <button class="btn-next" id="modal-next" onclick="modalNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ APPOINTMENT DETAIL MODAL ════ -->
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <div class="modal-title">Appointment Details</div>
+      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="appt-doctor-info" style="margin-bottom:20px;">
+        <div class="doctor-avatar-placeholder">👨‍⚕️</div>
+        <div>
+          <div class="doctor-name">Dr. Amelia Chen</div>
+          <div class="doctor-dept">Cardiology Department</div>
+        </div>
+      </div>
+      <div class="detail-row"><span class="detail-label">Department</span><span class="detail-value">Cardiology</span></div>
+      <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value">Wednesday, July 20</span></div>
+      <div class="detail-row"><span class="detail-label">Time</span><span class="detail-value">10:00 AM</span></div>
+      <div class="detail-row"><span class="detail-label">Reasons</span><span class="detail-value">Chest Pain</span></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-back" onclick="closeDetailModal()">Cancel</button>
+      <button class="btn-next" onclick="switchPage('messages'); closeDetailModal()">Message Doctor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Page switching
+  const titles = { dashboard:'Dashboard', appointments:'Appointments', departments:'Departments', records:'Medical Records', messages:'Messages', ai:'AI Support', settings:'Account Settings' };
+
+  function switchPage(name) {
+    document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const page = document.getElementById('page-' + name);
+    if (page) page.classList.add('active');
+    // Match nav item by data attribute
+    const navItem = document.querySelector('.nav-item[data-page="' + name + '"]');
+    if (navItem) navItem.classList.add('active');
+    const titleEl = document.getElementById('topbar-title');
+    if (titleEl) titleEl.textContent = titles[name] || '';
+    window.scrollTo(0, 0);
+    if (window.innerWidth <= 768) closeSidebar();
+  }
+
+  // ── Sidebar mobile
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+  document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar.contains(e.target) && !e.target.closest('.hamburger-dash')) closeSidebar();
+  });
+
+  // ── Tab switching (Appointments)
+  function switchTab(btn, tabId) {
+    btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['tab-upcoming','tab-completed','tab-cancelled'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = id === tabId ? 'block' : 'none';
+    });
+  }
+
+  // ── Select items (modal)
+  function selectItem(el, selector) {
+    el.closest('.modal-body, .modal-step-content').querySelectorAll(selector).forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── Book Appointment Modal
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  function openBookModal() {
+    currentStep = 1;
+    updateModal();
+    document.getElementById('book-modal').classList.add('open');
+  }
+  function closeBookModal() {
+    document.getElementById('book-modal').classList.remove('open');
+  }
+  function updateModal() {
+    for (let i = 1; i <= totalSteps; i++) {
+      const el = document.getElementById('modal-s' + i);
+      if (el) el.classList.toggle('active', i === currentStep);
+    }
+    document.getElementById('modal-step-label').textContent = `Step ${currentStep} of ${totalSteps}`;
+    document.getElementById('modal-back').style.display = currentStep > 1 ? 'block' : 'none';
+    document.getElementById('modal-next').textContent = currentStep === totalSteps ? 'Confirm Booking' : 'Next';
+  }
+  function modalNext() {
+    if (currentStep < totalSteps) { currentStep++; updateModal(); }
+    else {
+      closeBookModal();
+      currentStep = 1;
+      showToast('✓ Appointment booked successfully!');
+      switchPage('appointments');
+    }
+  }
+  function modalBack() {
+    if (currentStep > 1) { currentStep--; updateModal(); }
+  }
+
+  // ── Appointment Detail Modal
+  function openDetailModal() { document.getElementById('detail-modal').classList.add('open'); }
+  function closeDetailModal() { document.getElementById('detail-modal').classList.remove('open'); }
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+  });
+
+  // ── Messages
+  function sendDashMsg() {
+    const input = document.getElementById('dash-msg-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const msgs = document.getElementById('dash-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-bubble-row user';
+    div.innerHTML = `<div><div class="chat-bubble user-msg">${text}</div><div class="bubble-time" style="text-align:right;">Just now</div></div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    input.value = '';
+    setTimeout(() => {
+      const reply = document.createElement('div');
+      reply.className = 'chat-bubble-row';
+      reply.innerHTML = `<div><div class="chat-bubble doctor">Thank you for your message. I will get back to you shortly.</div><div class="bubble-time">Just now</div></div>`;
+      msgs.appendChild(reply);
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 800);
+  }
+
+  // ── AI Support (dashboard)
+  const chipResponses = {
+    "I don't feel well": "I'm sorry to hear that. Can you describe your symptoms? For example, do you have a fever, headache, or pain somewhere? I can help you prepare to speak with Dr. Amelia Chen.",
+    "Medication information": "I can help with general medication information. Please note I cannot prescribe medications. Which medication would you like to know about — dosage, side effects, or interactions?",
+    "Appointment help": "Happy to help! I can give you tips on what to bring, questions to ask your doctor, or how to reschedule your upcoming appointment with Dr. Amelia Chen on July 2.",
+    "Understand my lab results": "Lab results can be confusing. Your recent Cardiology Consultation notes are available in Medical Records. Which result would you like me to help explain?",
+  };
+
+  function sendDashChip(btn) {
+    const text = btn.textContent.trim();
+    addDashUserMsg(text);
+    const resp = chipResponses[text] || dashAiResponses[dashAiIndex % dashAiResponses.length];
+    dashAiIndex++;
+    setTimeout(() => addDashAiMsg(resp), 600);
+  }
+  const dashAiResponses = [
+    "Thank you for sharing that. Based on what you've described, it might be worth discussing with your doctor at your next visit. Is there anything specific I can help clarify?",
+    "I understand your concern. While I can provide general guidance, please always consult Dr. Amelia Chen or your care team for medical decisions. What else can I help with?",
+    "That's helpful context. I'd recommend monitoring your symptoms and contacting the clinic if they worsen. Can I assist you with booking an appointment or checking your records?",
+    "I hear you. For the most accurate advice, please reach out to your healthcare team directly. In the meantime, would you like help with appointment prep or medication information?",
+  ];
+  let dashAiIndex = 0;
+
+  function sendDashAiMsg() {
+    const input = document.getElementById('dash-ai-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addDashUserMsg(text);
+    input.value = '';
+    const resp = dashAiResponses[dashAiIndex % dashAiResponses.length];
+    dashAiIndex++;
+    setTimeout(() => addDashAiMsg(resp), 700);
+  }
+  function addDashUserMsg(text) {
+    const msgs = document.getElementById('dash-ai-messages');
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="user-msg-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+  function addDashAiMsg(text) {
+    const msgs = document.getElementById('dash-ai-messages');
+    const div = document.createElement('div');
+    div.className = 'ai-row';
+    div.innerHTML = `<div class="ai-bot-icon" style="width:32px;height:32px;flex-shrink:0;">🏥</div><div class="ai-msg-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+  function clearDashAi() {
+    const msgs = document.getElementById('dash-ai-messages');
+    msgs.innerHTML = `<div class="ai-row"><div class="ai-bot-icon" style="width:32px;height:32px;flex-shrink:0;">🏥</div><div class="ai-msg-bubble">Hi 👋 I'm MediBidge AI. I can help with medication questions, appointment prep, and general health information. What's on your mind today?</div></div>`;
+  }
+
+  // ── Toast
+  function showToast(msg) {
+    const t = document.getElementById('toast') || (() => {
+      const el = document.createElement('div');
+      el.id = 'toast';
+      el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:white;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:1000;transition:transform 300ms ease;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.15);';
+      document.body.appendChild(el);
+      return el;
+    })();
+    t.textContent = msg;
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(() => t.style.transform = 'translateX(-50%) translateY(80px)', 3000);
+  }
+  </script>
+  <script src="assets/medibridge-api.js"></script>
+</body>
+</html>

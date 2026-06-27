@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediBridge — Authentication</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/medibridge-enhancements.css" />
+  <style>
+    :root {
+      --green: #1B4D3E;
+      --green-dark: #133829;
+      --green-light: #E8F5F0;
+      --green-mid: #2D6B58;
+      --gray: #F7F8F8;
+      --gray-mid: #E5E7EB;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #D1D5DB;
+      --white: #ffffff;
+      --error: #DC2626;
+      --success: #16A34A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--gray);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* ── SCREEN SYSTEM ── */
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ── WAVY BACKGROUND ── */
+    .wavy-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .wavy-bg svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.55;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      margin-top: auto;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--white);
+      border-top: 1px solid var(--gray-mid);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--green);
+      font-size: 15px;
+      text-decoration: none;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 160ms;
+    }
+    .footer-links a:hover { color: var(--green); }
+
+    /* ── CENTERED LAYOUT (Login, Forgot, Reset) ── */
+    .centered-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .auth-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px 40px 36px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+    .card-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .card-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-logo-icon svg { width: 22px; height: 22px; fill: white; }
+    .card-logo-text {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.3px;
+    }
+    .card-logo-text span { font-weight: 400; }
+
+    .card-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 160ms, box-shadow 160ms;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(27,77,62,0.1);
+    }
+    .form-input::placeholder { color: #9CA3AF; }
+
+    .input-wrap {
+      position: relative;
+    }
+    .input-wrap .form-input { padding-right: 44px; }
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .toggle-pw:hover { color: var(--green); }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--green);
+      margin-top: 5px;
+    }
+    .form-hint.error { color: var(--error); }
+
+    .forgot-link {
+      display: block;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      margin-top: -12px;
+      margin-bottom: 20px;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 160ms, transform 160ms;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--green); color: white; }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-disabled {
+      background: var(--gray-mid);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+    .btn-disabled:hover { transform: none; }
+
+    .auth-footer-text {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 20px;
+    }
+    .auth-footer-text a {
+      color: var(--green);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .auth-footer-text a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gray-mid);
+      margin: 20px 0;
+    }
+
+    .support-text {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
+    .support-text a {
+      color: var(--green);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ── CHECKBOX ── */
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .checkbox-wrap input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--green);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .checkbox-wrap label {
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    .checkbox-wrap label a {
+      color: var(--green);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ── SPLIT LAYOUT (Signup steps) ── */
+    .split-page {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      z-index: 1;
+    }
+    .split-left {
+      background: linear-gradient(145deg, #d4eee6 0%, #c8e8df 40%, #dde8f5 80%, #e8dff5 100%);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .split-left-waves {
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .split-left-content { position: relative; z-index: 1; }
+    .split-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .split-nav-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .split-nav-icon svg { width: 20px; height: 20px; fill: white; }
+
+    .split-title {
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1.2;
+      margin-top: 32px;
+    }
+    .split-desc {
+      font-size: 15px;
+      color: #3D5A52;
+      line-height: 1.65;
+      margin-top: 12px;
+    }
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #2D5046;
+      font-weight: 500;
+    }
+    .check-icon {
+      width: 22px;
+      height: 22px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .check-icon svg { width: 12px; height: 12px; fill: white; }
+
+    .split-image {
+      margin-top: 28px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid rgba(27,77,62,0.15);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      max-height: 240px;
+    }
+    .split-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .split-right {
+      background: var(--white);
+      padding: 48px 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    /* ── STEP PROGRESS ── */
+    .step-progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 200ms;
+    }
+    .step-circle.done { background: var(--green); color: white; }
+    .step-circle.active { background: var(--green); color: white; }
+    .step-circle.pending {
+      background: var(--gray-mid);
+      color: var(--muted);
+    }
+    .step-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .step-label.active { color: var(--green); }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: var(--gray-mid);
+      margin: 0 8px;
+      min-width: 40px;
+      transition: background 200ms;
+    }
+    .step-line.done { background: var(--green); }
+
+    /* ── OTP INPUTS ── */
+    .otp-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .otp-input {
+      width: 52px;
+      height: 56px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 160ms, box-shadow 160ms;
+      flex: 1;
+    }
+    .otp-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(27,77,62,0.1);
+    }
+    .otp-input.filled { border-color: var(--green); }
+
+    .otp-timer {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .otp-timer span { font-weight: 700; color: var(--green); }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .success-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--green-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .success-icon svg { width: 36px; height: 36px; fill: var(--green); }
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .success-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .split-page {
+        grid-template-columns: 1fr;
+      }
+      .split-left {
+        padding: 32px 24px;
+        min-height: auto;
+      }
+      .split-title { font-size: 24px; margin-top: 16px; }
+      .split-image { max-height: 160px; }
+      .feature-list { display: none; }
+      .split-right { padding: 32px 24px; }
+      .step-label { display: none; }
+      .step-line { min-width: 24px; }
+      .auth-card { padding: 32px 24px; }
+      .site-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 20px 24px;
+      }
+      .footer-links { gap: 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .otp-input { width: 36px; height: 44px; font-size: 16px; border-radius: 8px; }
+      .otp-wrap { gap: 6px; justify-content: center; }
+      .card-title { font-size: 20px; }
+      .card-subtitle { font-size: 13px; }
+      .split-left { display: none; }
+      .split-right { padding: 24px 20px; }
+      .step-label { display: none; }
+      .step-line { min-width: 20px; }
+      .btn { min-height: 46px; font-size: 14px; }
+      .auth-card { padding: 28px 20px; }
+      .card-logo-text { font-size: 18px; }
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1000;
+      transition: transform 300ms ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .screen.active .auth-card,
+    .screen.active .split-right,
+    .screen.active .success-card {
+      animation: fadeIn 300ms ease forwards;
+    }
+  </style>
+</head>
+<body>
+
+<!-- WAVY BACKGROUND -->
+<div class="wavy-bg">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#a8e6cf;stop-opacity:0.6"/>
+        <stop offset="100%" style="stop-color:#c8b8e8;stop-opacity:0.4"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#b8d4f0;stop-opacity:0.5"/>
+        <stop offset="100%" style="stop-color:#f0e0a8;stop-opacity:0.3"/>
+      </linearGradient>
+    </defs>
+    <path d="M-100,200 C100,100 300,350 500,200 S900,50 1100,250 S1400,150 1600,200 L1600,0 L-100,0 Z" fill="url(#g1)"/>
+    <path d="M-100,700 C200,600 400,800 700,680 S1000,780 1200,700 S1450,780 1600,720 L1600,900 L-100,900 Z" fill="url(#g2)"/>
+    <path d="M1200,100 C1300,200 1500,150 1600,300 L1600,0 L1100,0 Z" fill="#b8c8f0" opacity="0.4"/>
+    <path d="M0,400 C100,300 200,500 350,380 S550,450 700,380" stroke="#a8d8c0" stroke-width="80" fill="none" opacity="0.3"/>
+    <path d="M800,600 C900,500 1100,650 1300,550 S1500,600 1600,520" stroke="#c8b8f0" stroke-width="60" fill="none" opacity="0.3"/>
+  </svg>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SVG ICONS (reusable) -->
+<svg style="display:none">
+  <symbol id="icon-bag" viewBox="0 0 24 24">
+    <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM8 7V5a4 4 0 018 0v2"/>
+    <path d="M12 12v4M10 14h4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24">
+    <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-eye" viewBox="0 0 24 24">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  </symbol>
+  <symbol id="icon-eye-off" viewBox="0 0 24 24">
+    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- ════════════════════════════════════════
+     SCREEN 1: LOGIN
+════════════════════════════════════════ -->
+<div class="screen active" id="screen-login">
+  <div class="centered-page">
+    <div class="auth-card">
+      <div class="card-logo">
+        <div class="card-logo-icon">
+          <svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg>
+        </div>
+        <span class="card-logo-text">Medi<span>Bridge</span></span>
+      </div>
+      <h1 class="card-title">Welcome Back</h1>
+      <p class="card-subtitle">Access your healthcare records, appointments, and care team.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="login-id">Hospital Patient ID / User ID</label>
+        <input class="form-input" type="text" id="login-id" placeholder="Enter your Patient ID" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-pw">Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="login-pw" placeholder="Enter your password" />
+          <button class="toggle-pw" onclick="togglePw('login-pw', this)" type="button" aria-label="Toggle password">
+            <svg width="18" height="18"><use href="#icon-eye"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="forgot-link" href="#" onclick="showScreen('screen-forgot'); return false;">Forget password?</a>
+
+      <button class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+
+      <p class="auth-footer-text" style="margin-top:20px;">
+        First time here? <a href="#" onclick="showScreen('screen-signup-1'); return false;">Activate Account</a>
+      </p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#">
+      <div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg>
+      </div>
+      MediBridge
+    </a>
+    <nav class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support Center</a>
+      <a href="#">Contact</a>
+    </nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 2: SIGNUP STEP 1 — IDENTITY
+════════════════════════════════════════ -->
+<div class="screen" id="screen-signup-1">
+  <div class="split-page">
+    <div class="split-left">
+      <div class="split-left-waves">
+        <svg viewBox="0 0 600 900" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <path d="M-50,200 C100,100 250,350 400,200 S550,100 700,250" stroke="#1B4D3E" stroke-width="120" fill="none" opacity="0.08"/>
+          <path d="M-50,500 C150,400 300,600 500,480 S650,550 750,500" stroke="#2D6B58" stroke-width="80" fill="none" opacity="0.06"/>
+          <path d="M200,700 C350,600 500,800 700,700" stroke="#1B4D3E" stroke-width="60" fill="none" opacity="0.05"/>
+        </svg>
+      </div>
+      <div class="split-left-content">
+        <a class="split-nav" href="#" onclick="showScreen('screen-login'); return false;">
+          <div class="split-nav-icon"><svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg></div>
+          MediBridge
+        </a>
+        <h2 class="split-title">Access your care anytime</h2>
+        <p class="split-desc">Manage appointments, view medical information, chat with your care team, and receive support in one place.</p>
+        <ul class="feature-list">
+          <li><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div> Book and manage appointments</li>
+          <li><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div> Access visit history</li>
+          <li><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div> Message your healthcare team</li>
+          <li><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div> AI support assistance</li>
+          <li><div class="check-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></div> Appointment reminders</li>
+        </ul>
+        <div class="split-image">
+          <img src="assets/hero-image.png" alt="Patient using MediBridge" />
+        </div>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="step-progress">
+        <div class="step">
+          <div class="step-circle active">1</div>
+          <span class="step-label active">Identity</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle pending">2</div>
+          <span class="step-label">OTP</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle pending">3</div>
+          <span class="step-label">Set Up</span>
+        </div>
+      </div>
+
+      <h2 class="card-title">Activate your account</h2>
+      <p class="card-subtitle">Verify your hospital details to set up portal access.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-id">Hospital Patient ID / User ID</label>
+        <input class="form-input" type="text" id="signup-id" placeholder="Enter Patient ID" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-email">Email Address</label>
+        <input class="form-input" type="email" id="signup-email" placeholder="Enter your email address" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-phone">Registered Phone Number</label>
+        <input class="form-input" type="tel" id="signup-phone" placeholder="(+234) 000-0000" />
+      </div>
+
+      <button class="btn btn-primary" onclick="handleIdentity()">Verify Identity &rarr;</button>
+
+      <p class="auth-footer-text">Already have an account? <a href="#" onclick="showScreen('screen-login'); return false;">Log In</a></p>
+      <hr class="divider" />
+      <p class="support-text">Need help with your Patient ID? <a href="#">Contact Support</a></p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#" onclick="showScreen('screen-login'); return false;">
+      <div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg>
+      </div>
+      MediBridge
+    </a>
+    <nav class="footer-links">
+      <a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+      <a href="#">Support Center</a><a href="#">Contact</a>
+    </nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 3: SIGNUP STEP 2 — OTP
+════════════════════════════════════════ -->
+<div class="screen" id="screen-signup-2">
+  <div class="split-page">
+    <div class="split-left">
+      <div class="split-left-waves">
+        <svg viewBox="0 0 600 900" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+          <path d="M-50,200 C100,100 250,350 400,200 S550,100 700,250" stroke="#1B4D3E" stroke-width="120" fill="none" opacity="0.08"/>
+        </svg>
+      </div>
+      <div class="split-left-content">
+        <a class="split-nav" href="#" onclick="showScreen('screen-login'); return false;">
+          <div class="split-nav-icon"><svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg></div>
+          MediBridge
+        </a>
+        <h2 class="split-title">Securing your healthcare journey.</h2>
+        <p class="split-desc">We use multi-factor authentication to ensure your medical records and personal data remain private and protected at every step.</p>
+        <div class="split-image" style="margin-top:auto;">
+          <img src="assets/hero-image.png" alt="Security illustration" style="filter:hue-rotate(180deg) saturate(0.6);" />
+        </div>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="step-progress">
+        <div class="step">
+          <div class="step-circle done">&#10003;</div>
+          <span class="step-label">Identity</span>
+        </div>
+        <div class="step-line done"></div>
+        <div class="step">
+          <div class="step-circle active">2</div>
+          <span class="step-label active">OTP</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step-circle pending">3</div>
+          <span class="step-label">Set Up</span>
+        </div>
+      </div>
+
+      <h2 class="card-title">Verify your account</h2>
+      <p class="card-subtitle">We'll send a 6-digit verification code to your email to verify your account.</p>
+
+      <div class="otp-wrap" id="otp-wrap">
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+        <input class="otp-input" type="text" maxlength="1" inputmode="numeric" />
+      </div>
+      <p class="otp-timer">Code expires in <span id="otp-countdown">5:00</span></p>
+
+      <button class="btn btn-primary" id="otp-btn" onclick="handleOTP()">Verify Code</button>
+      <p class="auth-footer-text" style="margin-top:16px;">
+        Didn't receive the code? <a href="#" onclick="resendCode(); return false;">Resend code</a>
+      </p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#">
+      <div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg>
+      </div>
+      MediBridge
+    </a>
+    <nav class="footer-links">
+      <a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+      <a href="#">Support Center</a><a href="#">Contact</a>
+    </nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 4: SIGNUP STEP 3 — SET UP PASSWORD
+════════════════════════════════════════ -->
+<div class="screen" id="screen-signup-3">
+  <div class="split-page">
+    <div class="split-left">
+      <div class="split-left-content">
+        <a class="split-nav" href="#" onclick="showScreen('screen-login'); return false;">
+          <div class="split-nav-icon"><svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg></div>
+          MediBridge
+        </a>
+        <h2 class="split-title">Secure Your Access</h2>
+        <p class="split-desc">Your health data is protected with industry-leading encryption. Step 3 of 3: finalise your security credentials.</p>
+        <div class="split-image" style="margin-top:auto;">
+          <img src="assets/hero-image.png" alt="Security" style="filter:saturate(0.5) brightness(0.8);" />
+        </div>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="step-progress">
+        <div class="step">
+          <div class="step-circle done">&#10003;</div>
+          <span class="step-label">Identity</span>
+        </div>
+        <div class="step-line done"></div>
+        <div class="step">
+          <div class="step-circle done">&#10003;</div>
+          <span class="step-label">OTP</span>
+        </div>
+        <div class="step-line done"></div>
+        <div class="step">
+          <div class="step-circle active">3</div>
+          <span class="step-label active">Set Up</span>
+        </div>
+      </div>
+
+      <h2 class="card-title">Set Up Password</h2>
+      <p class="card-subtitle">Finalise your security credentials.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="new-pw">Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="new-pw" placeholder="Enter your password" />
+          <button class="toggle-pw" onclick="togglePw('new-pw', this)" type="button" aria-label="Toggle password">
+            <svg width="18" height="18"><use href="#icon-eye"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="confirm-pw">Confirm Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="confirm-pw" placeholder="Confirm your password" />
+          <button class="toggle-pw" onclick="togglePw('confirm-pw', this)" type="button" aria-label="Toggle password">
+            <svg width="18" height="18"><use href="#icon-eye"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="checkbox-wrap">
+        <input type="checkbox" id="terms" />
+        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</label>
+      </div>
+
+      <button class="btn btn-primary" onclick="handleSetupPassword()">Activate Account</button>
+      <p class="support-text" style="margin-top:20px;">Need help? <a href="#">Contact Support</a></p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#">
+      <div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg>
+      </div>
+      MediBridge
+    </a>
+    <nav class="footer-links">
+      <a href="#">Privacy Policy</a><a href="#">Terms of Service</a>
+      <a href="#">Support Center</a><a href="#">Contact</a>
+    </nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 5: ACCOUNT READY
+════════════════════════════════════════ -->
+<div class="screen" id="screen-success">
+  <div class="success-page">
+    <div class="success-card">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><use href="#icon-check"/></svg>
+      </div>
+      <h2 class="success-title">Your account is ready.</h2>
+      <p class="success-desc">Account activation complete. You can now access appointments, records, and 24/7 medical support.</p>
+      <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#"><div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg></div>MediBridge</a>
+    <nav class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support Center</a><a href="#">Contact</a></nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 6: FORGOT PASSWORD
+════════════════════════════════════════ -->
+<div class="screen" id="screen-forgot">
+  <div class="centered-page">
+    <div class="auth-card">
+      <div class="card-logo">
+        <div class="card-logo-icon"><svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg></div>
+        <span class="card-logo-text">Medi<span>Bridge</span></span>
+      </div>
+      <h1 class="card-title">Forgot Your Password?</h1>
+      <p class="card-subtitle">We'll send a 6-digit verification code to your email to reset your password.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="forgot-email">Email Address</label>
+        <input class="form-input" type="email" id="forgot-email" placeholder="Enter your email address" />
+      </div>
+
+      <button class="btn btn-primary" onclick="handleForgot()">Send Code</button>
+      <p class="auth-footer-text">Remember your password? <a href="#" onclick="showScreen('screen-login'); return false;">Log In</a></p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#"><div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg></div>MediBridge</a>
+    <nav class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support Center</a><a href="#">Contact</a></nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 7: RESET PASSWORD
+════════════════════════════════════════ -->
+<div class="screen" id="screen-reset">
+  <div class="centered-page">
+    <div class="auth-card">
+      <div class="card-logo">
+        <div class="card-logo-icon"><svg viewBox="0 0 24 24"><use href="#icon-bag"/></svg></div>
+        <span class="card-logo-text">Medi<span>Bridge</span></span>
+      </div>
+      <h1 class="card-title">Reset Your Password?</h1>
+      <p class="card-subtitle">You're just one step away from accessing your account.</p>
+
+      <div class="form-group">
+        <label class="form-label" for="reset-pw">New Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="reset-pw" placeholder="Enter your new password" />
+          <button class="toggle-pw" onclick="togglePw('reset-pw', this)" type="button" aria-label="Toggle password">
+            <svg width="18" height="18"><use href="#icon-eye"/></svg>
+          </button>
+        </div>
+        <p class="form-hint">Minimum 8 characters, must include letters and numbers</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="reset-confirm-pw">Confirm Password</label>
+        <div class="input-wrap">
+          <input class="form-input" type="password" id="reset-confirm-pw" placeholder="Confirm password" />
+          <button class="toggle-pw" onclick="togglePw('reset-confirm-pw', this)" type="button" aria-label="Toggle password">
+            <svg width="18" height="18"><use href="#icon-eye"/></svg>
+          </button>
+        </div>
+        <p class="form-hint">Must match the above field</p>
+      </div>
+
+      <button class="btn btn-primary" onclick="handleReset()">Update Password</button>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <a class="footer-brand" href="#"><div class="card-logo-icon" style="width:28px;height:28px;border-radius:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;"><use href="#icon-bag"/></svg></div>MediBridge</a>
+    <nav class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support Center</a><a href="#">Contact</a></nav>
+    <span>&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+  </footer>
+</div>
+
+<script>
+  // ── Screen navigation
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+    if (id === 'screen-signup-2') startOTPTimer();
+  }
+
+  // ── Toast notification
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── Toggle password visibility
+  function togglePw(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.innerHTML = isHidden
+      ? '<svg width="18" height="18"><use href="#icon-eye-off"/></svg>'
+      : '<svg width="18" height="18"><use href="#icon-eye"/></svg>';
+  }
+
+  // ── Login handler
+  function handleLogin() {
+    const id = document.getElementById('login-id').value.trim();
+    const pw = document.getElementById('login-pw').value.trim();
+    if (!id || !pw) { showToast('Please fill in all fields'); return; }
+    showToast('Signing in...');
+    setTimeout(() => { showScreen('screen-success'); }, 1200);
+  }
+
+  // ── Identity handler
+  function handleIdentity() {
+    const id = document.getElementById('signup-id').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const phone = document.getElementById('signup-phone').value.trim();
+    if (!id || !email || !phone) { showToast('Please fill in all fields'); return; }
+    showToast('Sending verification code...');
+    setTimeout(() => showScreen('screen-signup-2'), 1000);
+  }
+
+  // ── OTP inputs — auto-advance
+  const otpInputs = document.querySelectorAll('.otp-input');
+  otpInputs.forEach((input, i) => {
+    input.addEventListener('input', (e) => {
+      const val = e.target.value.replace(/\D/g, '');
+      e.target.value = val;
+      if (val && i < otpInputs.length - 1) otpInputs[i + 1].focus();
+      e.target.classList.toggle('filled', !!val);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i - 1].focus();
+    });
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      [...paste].slice(0, 6).forEach((char, j) => {
+        if (otpInputs[j]) { otpInputs[j].value = char; otpInputs[j].classList.add('filled'); }
+      });
+    });
+  });
+
+  // ── OTP countdown timer
+  let otpInterval;
+  function startOTPTimer() {
+    clearInterval(otpInterval);
+    let seconds = 300;
+    const el = document.getElementById('otp-countdown');
+    otpInterval = setInterval(() => {
+      seconds--;
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      if (el) el.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+      if (seconds <= 0) clearInterval(otpInterval);
+    }, 1000);
+  }
+
+  function resendCode() {
+    showToast('Verification code resent!');
+    otpInputs.forEach(i => { i.value = ''; i.classList.remove('filled'); });
+    startOTPTimer();
+  }
+
+  function handleOTP() {
+    const code = [...otpInputs].map(i => i.value).join('');
+    if (code.length < 6) { showToast('Please enter the 6-digit code'); return; }
+    showToast('Verifying code...');
+    setTimeout(() => showScreen('screen-signup-3'), 1000);
+  }
+
+  // ── Setup password handler
+  function handleSetupPassword() {
+    const pw = document.getElementById('new-pw').value;
+    const confirm = document.getElementById('confirm-pw').value;
+    const terms = document.getElementById('terms').checked;
+    if (!pw || !confirm) { showToast('Please fill in both password fields'); return; }
+    if (pw !== confirm) { showToast('Passwords do not match'); return; }
+    if (pw.length < 8) { showToast('Password must be at least 8 characters'); return; }
+    if (!terms) { showToast('Please accept the Terms of Service'); return; }
+    showToast('Activating your account...');
+    setTimeout(() => { showScreen('screen-success'); }, 1200);
+  }
+
+  // ── Forgot password handler
+  function handleForgot() {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (!email) { showToast('Please enter your email address'); return; }
+    showToast('Verification code sent!');
+    setTimeout(() => showScreen('screen-reset'), 1200);
+  }
+
+  // ── Reset password handler
+  function handleReset() {
+    const pw = document.getElementById('reset-pw').value;
+    const confirm = document.getElementById('reset-confirm-pw').value;
+    if (!pw || !confirm) { showToast('Please fill in all fields'); return; }
+    if (pw !== confirm) { showToast('Passwords do not match'); return; }
+    if (pw.length < 8) { showToast('Password must be at least 8 characters'); return; }
+    showToast('Password updated successfully!');
+    setTimeout(() => showScreen('screen-login'), 1400);
+  }
+  </script>
+  <script src="assets/medibridge-api.js"></script>
+</body>
+</html>

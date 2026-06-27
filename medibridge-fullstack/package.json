@@ -1,0 +1,19 @@
+{
+  "name": "medibridge-fullstack",
+  "version": "2.0.0",
+  "description": "MediBridge full-stack healthcare portal with responsive frontend, department pages, appointment APIs, authentication demo APIs, and medical AI support.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "healthcare",
+    "patient-portal",
+    "medibridge",
+    "frontend",
+    "backend"
+  ],
+  "author": "lawalolamide48-cell",
+  "license": "MIT"
+}

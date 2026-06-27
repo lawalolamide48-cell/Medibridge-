@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediBridge — Healthcare That Connects You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/medibridge-enhancements.css" />
+  <style>
+    :root {
+      --green: #1B4D3E;
+      --green-dark: #133829;
+      --green-mid: #2D6B58;
+      --green-light: #E8F5F0;
+      --green-pale: #F0F9F6;
+      --coral: #E8734A;
+      --gold: #F5A623;
+      --gray: #F7F8F8;
+      --gray-mid: #E5E7EB;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #D1D5DB;
+      --white: #ffffff;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--white);
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-mid);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--green);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 20px; height: 20px; fill: white; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 160ms;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); font-weight: 600; }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .btn-ghost {
+      padding: 9px 20px;
+      border: none;
+      background: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      border-radius: 8px;
+      transition: background 160ms;
+    }
+    .btn-ghost:hover { background: var(--gray); }
+    .btn-primary {
+      padding: 10px 22px;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 160ms, transform 160ms;
+    }
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+    }
+    .hamburger span {
+      width: 18px; height: 2px;
+      background: var(--green);
+      border-radius: 2px;
+      transition: transform 200ms;
+      display: block;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--green);
+      min-height: 520px;
+      padding: 80px 24px 60px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('assets/hero-doctor.png') center/cover no-repeat;
+      opacity: 0.18;
+    }
+    .hero-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      width: 100%;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 800;
+      color: white;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      letter-spacing: -0.5px;
+    }
+    .hero p {
+      font-size: clamp(15px, 1.5vw, 18px);
+      color: rgba(255,255,255,0.8);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-white {
+      padding: 13px 28px;
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      transition: transform 160ms, box-shadow 160ms;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .btn-outline-white {
+      padding: 13px 28px;
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      transition: background 160ms, border-color 160ms;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.12); border-color: white; }
+
+    .hero-badges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .badge-icon {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 80px 24px; }
+    .section-inner { max-width: var(--max); margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 10px;
+      max-width: 520px;
+    }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header .section-subtitle { margin: 10px auto 0; }
+
+    /* ── WHY MEDIBRIDGE ── */
+    .why-section { background: var(--white); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: box-shadow 200ms, transform 200ms;
+    }
+    .feature-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── AI SUPPORT PREVIEW ── */
+    .ai-section { background: var(--gray); }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .ai-left h2 { font-size: clamp(26px, 3vw, 36px); font-weight: 800; line-height: 1.25; margin-bottom: 16px; }
+    .ai-left p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .ai-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .ai-features li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: var(--muted); font-weight: 500;
+    }
+    .ai-features li::before {
+      content: "🔒";
+      font-size: 15px;
+    }
+    .ai-features li:nth-child(2)::before { content: "🕐"; }
+    .ai-features li:nth-child(3)::before { content: "💬"; }
+
+    .chat-preview {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    .chat-header {
+      background: var(--green);
+      padding: 14px 20px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
+    .chat-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; min-height: 200px; }
+    .chat-msg {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .chat-msg.ai { background: var(--green-light); color: var(--green-dark); align-self: flex-start; border-radius: 4px 12px 12px 12px; }
+    .chat-msg.user { background: var(--green); color: white; align-self: flex-end; border-radius: 12px 4px 12px 12px; }
+    .chat-input-area {
+      padding: 14px 16px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      color: var(--muted);
+    }
+    .chat-send {
+      width: 36px; height: 36px;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* ── DEPARTMENTS ── */
+    .dept-section { background: var(--green); padding: 80px 24px; }
+    .dept-section .section-tag { background: rgba(255,255,255,0.15); color: white; }
+    .dept-section .section-title { color: white; }
+    .dept-section .section-subtitle { color: rgba(255,255,255,0.7); }
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+    .dept-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: transform 200ms, box-shadow 200ms;
+      cursor: pointer;
+    }
+    .dept-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); }
+    .dept-icon { font-size: 28px; margin-bottom: 12px; }
+    .dept-card h3 { font-size: 15px; font-weight: 700; color: var(--text); }
+    .dept-explore {
+      display: flex;
+      justify-content: center;
+      margin-top: 36px;
+    }
+    .btn-outline-green {
+      padding: 12px 28px;
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 160ms, border-color 160ms;
+      cursor: pointer;
+    }
+    .btn-outline-green:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section { background: var(--gray); }
+    .testimonials-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .testimonial-nav { display: flex; gap: 10px; }
+    .nav-arrow {
+      width: 40px; height: 40px;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 160ms, border-color 160ms;
+    }
+    .nav-arrow:hover { background: var(--green); color: white; border-color: var(--green); }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testimonial-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 24px;
+      border: 1px solid var(--gray-mid);
+    }
+    .stars { color: var(--gold); font-size: 16px; margin-bottom: 14px; letter-spacing: 2px; }
+    .testimonial-card p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--green-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .author-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .author-role { font-size: 12px; color: var(--muted); }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--white); }
+    .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      border: 1px solid var(--gray-mid);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .faq-question {
+      width: 100%;
+      padding: 18px 20px;
+      background: white;
+      border: none;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 160ms;
+    }
+    .faq-question:hover { background: var(--gray); }
+    .faq-chevron {
+      font-size: 18px;
+      color: var(--muted);
+      transition: transform 250ms;
+      flex-shrink: 0;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 300ms ease, padding 300ms ease;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      padding: 0 20px;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding: 0 20px 18px; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section {
+      background: var(--green);
+      padding: 72px 24px;
+    }
+    .newsletter-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .newsletter-inner h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 800; color: white; margin-bottom: 12px; }
+    .newsletter-inner p { font-size: 15px; color: rgba(255,255,255,0.75); margin-bottom: 28px; line-height: 1.6; }
+    .newsletter-form { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .newsletter-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 13px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      color: var(--text);
+    }
+    .btn-subscribe {
+      padding: 13px 28px;
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 160ms, transform 160ms;
+      font-family: inherit;
+    }
+    .btn-subscribe:hover { background: var(--green-light); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: white;
+      border-top: 1px solid var(--gray-mid);
+      padding: 20px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: var(--muted); transition: color 160ms; }
+    .footer-links a:hover { color: var(--green); }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+
+    /* ── DEPARTMENT PAGE ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .dept-hero {
+      background: var(--green);
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .dept-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('assets/hero-doctor.png') center/cover;
+      opacity: 0.12;
+    }
+    .dept-hero-inner { position: relative; z-index: 1; }
+    .dept-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: white; margin-bottom: 12px; }
+    .dept-hero p { color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 28px; }
+    .search-bar {
+      display: flex;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .search-input {
+      flex: 1;
+      padding: 13px 18px;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+    }
+    .search-btn {
+      padding: 13px 24px;
+      background: white;
+      color: var(--green);
+      border: none;
+      border-radius: 0 8px 8px 0;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border-left: 1px solid var(--border);
+    }
+
+    .filter-tabs {
+      max-width: var(--max);
+      margin: 32px auto 0;
+      padding: 0 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .filter-tab.active, .filter-tab:hover {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    .dept-cards-grid {
+      max-width: var(--max);
+      margin: 32px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .dept-card-full {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      padding: 24px;
+      transition: box-shadow 200ms, transform 200ms;
+      cursor: pointer;
+      position: relative;
+    }
+    .dept-card-full:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.1); transform: translateY(-3px); }
+    .dept-specialist-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .dept-card-full .dept-icon { font-size: 32px; margin-bottom: 14px; }
+    .dept-card-full h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .dept-card-full p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .btn-view-dept {
+      width: 100%;
+      padding: 10px;
+      background: white;
+      color: var(--green);
+      border: 1.5px solid var(--green);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .btn-view-dept:hover { background: var(--green); color: white; }
+
+    /* ── AI SUPPORT PAGE ── */
+    .ai-page-hero {
+      background: var(--green);
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-page-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('assets/hero-doctor.png') center/cover;
+      opacity: 0.1;
+    }
+    .ai-page-hero-inner { position: relative; z-index: 1; }
+    .ai-page-hero h1 { font-size: clamp(24px, 3.5vw, 40px); font-weight: 800; color: white; margin-bottom: 10px; }
+    .ai-page-hero p { color: rgba(255,255,255,0.8); font-size: 15px; max-width: 520px; margin: 0 auto; }
+
+    .ai-chat-section {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .ai-chat-label {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .ai-chat-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; text-align: center; }
+    .ai-chat-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 28px; }
+
+    .ai-chat-box {
+      background: white;
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .ai-chat-messages {
+      padding: 24px;
+      min-height: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .ai-msg-row { display: flex; gap: 10px; align-items: flex-start; }
+    .ai-avatar {
+      width: 32px; height: 32px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .ai-bubble {
+      background: var(--green-light);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 4px 14px 14px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 80%;
+    }
+    .user-bubble {
+      background: var(--green);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 14px 4px 14px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 80%;
+      margin-left: auto;
+    }
+
+    .ai-chips {
+      padding: 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-top: 1px solid var(--gray-mid);
+    }
+    .ai-chip {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      background: white;
+      cursor: pointer;
+      transition: all 160ms;
+    }
+    .ai-chip:hover { background: var(--green); color: white; border-color: var(--green); }
+
+    .ai-input-row {
+      padding: 14px 16px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .ai-text-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    .ai-text-input:focus { border-color: var(--green); }
+    .ai-send-btn {
+      width: 40px; height: 40px;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .ai-disclaimer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 12px 16px;
+      border-top: 1px solid var(--gray-mid);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .dept-grid { grid-template-columns: repeat(4, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+      .ai-grid { grid-template-columns: 1fr; gap: 36px; }
+      .dept-cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 72px;
+        left: 0; right: 0;
+        background: white;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--gray-mid);
+        gap: 4px;
+        z-index: 99;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      }
+      .nav-links.open a {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--gray-mid);
+        font-size: 16px;
+      }
+      .features-grid { grid-template-columns: 1fr; }
+      .dept-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .dept-cards-grid { grid-template-columns: 1fr 1fr; }
+      .hero-badges { gap: 10px; }
+      .nav-actions .btn-ghost { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .dept-grid { grid-template-columns: repeat(2, 1fr); }
+      .dept-cards-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .section { padding: 56px 20px; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-input { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ PAGE: HOME ════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#" onclick="showPage('page-home')">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM8 7V5a4 4 0 018 0v2"/></svg></div>
+        MediBridge
+      </a>
+      <div class="nav-links" id="home-nav-links">
+        <a href="#" class="active" onclick="showPage('page-home'); closeNav()">Home</a>
+        <a href="#" onclick="showPage('page-departments'); closeNav()">Departments</a>
+        <a href="#" onclick="showPage('page-ai'); closeNav()">AI Support</a>
+        <a href="#">About Us</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost" onclick="window.location.href='auth.html'">Login</button>
+        <button class="btn-primary" onclick="window.location.href='auth.html'">Activate Account</button>
+        <button class="hamburger" id="hamburger" onclick="toggleNav()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Healthcare That<br />Connects You</h1>
+      <p>Book appointments, talk with trusted doctors, receive support, and get instant AI health guidance in one calm experience.</p>
+      <div class="hero-btns">
+        <button class="btn-white" onclick="window.location.href='auth.html'">Book Appointment</button>
+        <button class="btn-outline-white" onclick="showPage('page-ai')">Chat With AI Support</button>
+      </div>
+      <div class="hero-badges">
+        <div class="badge"><div class="badge-icon">👨‍⚕️</div>75+ Verified doctors</div>
+        <div class="badge"><div class="badge-icon">🕐</div>24/7 AI support</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY MEDIBRIDGE -->
+  <section class="section why-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">Why MediBridge</span>
+        <h2 class="section-title">A calmer way to care for yourself.</h2>
+        <p class="section-subtitle">One platform connecting patients with the right care, exactly when they need it.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#E8F5F0;">📅</div>
+          <h3>Easy Booking</h3>
+          <p>Find and schedule appointments with verified doctors in minutes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#FEF3E8;">🤖</div>
+          <h3>AI Support</h3>
+          <p>Get instant calm responses to your health questions 24/7.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:#EEF2FF;">💬</div>
+          <h3>Message your care team</h3>
+          <p>Secure conversations with doctors, with read receipts and attachments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI SUPPORT PREVIEW -->
+  <section class="section ai-section">
+    <div class="section-inner">
+      <div class="ai-grid">
+        <div class="ai-left">
+          <span class="section-tag">AI Support</span>
+          <h2>Ask anything about your health instantly.</h2>
+          <p>Get calm, private support from MediBridge AI before you even sign up. Talk through symptoms, prepare for a visit, or just think out loud.</p>
+          <ul class="ai-features">
+            <li>Anonymous — nothing leaves this device.</li>
+            <li>Gentle and non-judgmental, 24/7</li>
+            <li>Not a replacement for medical care.</li>
+          </ul>
+          <button class="btn-primary" onclick="showPage('page-ai')">Start Free AI Chat</button>
+        </div>
+        <div class="chat-preview">
+          <div class="chat-header">
+            <div class="chat-dot"></div>
+            MediBridge AI · Active
+          </div>
+          <div class="chat-body">
+            <div class="chat-msg ai">How can I assist you today? I can help with symptom checking or stress management tips.</div>
+            <div class="chat-msg user">I have a headache, what could it mean?</div>
+            <div class="chat-msg ai">Headaches can be caused by many factors including stress, dehydration, or eye strain. How long has this been occurring?</div>
+            <div class="chat-msg user">How do I reduce stress?</div>
+          </div>
+          <div class="chat-input-area">
+            <input class="chat-input" placeholder="Type anything..." readonly />
+            <button class="chat-send">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPARTMENTS -->
+  <section class="dept-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">Specialty care</span>
+        <h2 class="section-title" style="color:white;">10+ departments. One unified record.</h2>
+        <p class="section-subtitle" style="color:rgba(255,255,255,0.7); margin:10px auto 0;">Find the right specialist for every health need.</p>
+      </div>
+      <div class="dept-grid">
+        <div class="dept-card"><div class="dept-icon">❤️</div><h3>Cardiology</h3></div>
+        <div class="dept-card"><div class="dept-icon">🧒</div><h3>Pediatrics</h3></div>
+        <div class="dept-card"><div class="dept-icon">🧠</div><h3>Mental Health</h3></div>
+        <div class="dept-card"><div class="dept-icon">🦷</div><h3>Dentistry</h3></div>
+        <div class="dept-card"><div class="dept-icon">🦴</div><h3>Orthopedics</h3></div>
+        <div class="dept-card"><div class="dept-icon">🩺</div><h3>General Practice</h3></div>
+        <div class="dept-card"><div class="dept-icon">👁️</div><h3>OB-GYN</h3></div>
+        <div class="dept-card"><div class="dept-icon">👁️</div><h3>Ophthalmology</h3></div>
+      </div>
+      <div class="dept-explore">
+        <button class="btn-outline-green" onclick="showPage('page-departments')">Explore all Departments</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section testimonials-section">
+    <div class="section-inner">
+      <div class="testimonials-header">
+        <div>
+          <span class="section-tag">Patient stories</span>
+          <h2 class="section-title">Real people. Real care.<br />Real coordination</h2>
+        </div>
+        <div class="testimonial-nav">
+          <button class="nav-arrow">&#8592;</button>
+          <button class="nav-arrow">&#8594;</button>
+        </div>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"I rescheduled my mother's cardiology visit in under a minute. The whole family is on it now."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">👩</div>
+            <div><div class="author-name">Jordan A.</div><div class="author-role">Family caregiver</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"MediCare isn't just a hospital, it's a partner in my family's health. The pediatrics team is simply the best in the state."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">👩🏽</div>
+            <div><div class="author-name">Priya S.</div><div class="author-role">Patient</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The AI support helped me prep questions before my visit. My doctor noticed the difference."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">👨🏾</div>
+            <div><div class="author-name">Marcus W.</div><div class="author-role">Patient</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section faq-section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">FAQ</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Can I use the AI assistant for free?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">Yes! The AI assistant is available to everyone without signing up. You can chat anonymously and your conversation stays on your device.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What is a patient ID and how do I find mine?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">Your Patient ID is issued by the hospital when you register. You can find it on your registration documents, hospital card, or by contacting the front desk.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            How do I book an appointment?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">Log in to your account, go to Appointments, click "Book New Appointment", select your department and doctor, choose a date and time, and confirm your booking.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Are my medical records secure?
+            <span class="faq-chevron">▾</span>
+          </button>
+          <div class="faq-answer">Absolutely. All records are encrypted with industry-leading security. Only you and your care team can access your health information.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter-section">
+    <div class="newsletter-inner">
+      <h2>Stay informed on your health</h2>
+      <p>Get the latest health tips, medical news, and app updates delivered to your inbox once a week.</p>
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="Enter your email address" />
+        <button class="btn-subscribe">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-icon" style="width:28px;height:28px;border-radius:6px;">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
+        </div>
+        MediBridge
+      </div>
+      <nav class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Support Center</a>
+        <a href="#">Contact</a>
+      </nav>
+      <span class="footer-copy">&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════ PAGE: DEPARTMENTS ════════════════════ -->
+<div class="page" id="page-departments">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#" onclick="showPage('page-home')">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg></div>
+        MediBridge
+      </a>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('page-home')">Home</a>
+        <a href="#" class="active">Departments</a>
+        <a href="#" onclick="showPage('page-ai')">AI Support</a>
+        <a href="#">About Us</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost" onclick="window.location.href='auth.html'">Login</button>
+        <button class="btn-primary" onclick="window.location.href='auth.html'">Activate Account</button>
+        <button class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dept-hero">
+    <div class="dept-hero-inner">
+      <h1>Find The Right Department<br />For Your Care</h1>
+      <p>Explore hospital specialties, available services, and care teams.</p>
+      <div class="search-bar">
+        <input class="search-input" placeholder="Search departments or conditions" />
+        <button class="search-btn">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active">All</button>
+    <button class="filter-tab">Medical</button>
+    <button class="filter-tab">Surgical</button>
+    <button class="filter-tab">Diagnostics</button>
+    <button class="filter-tab">Mental Health</button>
+    <button class="filter-tab">Emergency</button>
+    <button class="filter-tab">Women &amp; Children</button>
+  </div>
+
+  <div class="dept-cards-grid">
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">❤️</div><h3>Cardiology</h3><p>Heart and cardiovascular care. Specialized diagnostics and treatment for heart health.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🧠</div><h3>Neurology</h3><p>Brain and nervous system care. Advanced neurological assessment and management.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🧒</div><h3>Pediatrics</h3><p>Healthcare for children and adolescents. Compassionate care for our youngest patients.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🦷</div><h3>Dentistry</h3><p>Dental care and oral health. Routine checkups and specialized dental procedures.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">👁️</div><h3>Ophthalmology</h3><p>Focuses on the diagnosis and treatment of eye and vision problems.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🦴</div><h3>Orthopedics</h3><p>Bones, joints and mobility care. Advanced orthopedic surgery and rehabilitation.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🤰</div><h3>OB-GYN</h3><p>Focuses on women's reproductive health and pregnancy care.</p><button class="btn-view-dept">View Department</button></div>
+    <div class="dept-card-full"><span class="dept-specialist-badge">5 Specialists</span><div class="dept-icon">🩺</div><h3>General Practice</h3><p>Primary and preventive care. Your first point of contact for total health management.</p><button class="btn-view-dept">View Department</button></div>
+  </div>
+
+  <div style="max-width:var(--max);margin:0 auto;padding:16px 24px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <span style="font-size:14px;color:var(--muted);">Showing 8 of 14</span>
+    <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);">
+      Page 1 of 2
+      <button class="nav-arrow">«</button>
+      <button class="nav-arrow">‹</button>
+      <button class="nav-arrow">›</button>
+      <button class="nav-arrow">»</button>
+    </div>
+  </div>
+
+  <!-- Newsletter -->
+  <section class="newsletter-section">
+    <div class="newsletter-inner">
+      <h2>Stay informed on your health</h2>
+      <p>Get the latest health tips, medical news, and app updates delivered to your inbox once a week.</p>
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="Enter your email address" />
+        <button class="btn-subscribe">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="logo-icon" style="width:28px;height:28px;border-radius:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg></div>MediBridge</div>
+      <nav class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support Center</a><a href="#">Contact</a></nav>
+      <span class="footer-copy">&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════ PAGE: AI SUPPORT ════════════════════ -->
+<div class="page" id="page-ai">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#" onclick="showPage('page-home')">
+        <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg></div>
+        MediBridge
+      </a>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('page-home')">Home</a>
+        <a href="#" onclick="showPage('page-departments')">Departments</a>
+        <a href="#" class="active">AI Support</a>
+        <a href="#">About Us</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost" onclick="window.location.href='auth.html'">Login</button>
+        <button class="btn-primary" onclick="window.location.href='auth.html'">Activate Account</button>
+        <button class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ai-page-hero">
+    <div class="ai-page-hero-inner">
+      <h1>Talk To MediCare AI Support</h1>
+      <p>Describe your symptoms or ask any hospital-related question. The AI will guide you step-by-step.</p>
+    </div>
+  </div>
+
+  <div class="ai-chat-section">
+    <div class="ai-chat-label"><span class="section-tag">AI Support</span></div>
+    <h2 class="ai-chat-title">How can I help today?</h2>
+    <p class="ai-chat-sub">No login required. Conversations are private and not stored to your record.</p>
+
+    <div class="ai-chat-box">
+      <div class="ai-chat-messages" id="ai-messages">
+        <div class="ai-msg-row">
+          <div class="ai-avatar">🏥</div>
+          <div class="ai-bubble">Hi 👋 I'm MediBridge AI. I can help with medication questions, appointment prep, and general health information. What's on your mind today?</div>
+        </div>
+      </div>
+      <div class="ai-chips">
+        <button class="ai-chip" onclick="sendChip(this)">I don't feel well</button>
+        <button class="ai-chip" onclick="sendChip(this)">Medication information</button>
+        <button class="ai-chip" onclick="sendChip(this)">Appointment help</button>
+        <button class="ai-chip" onclick="sendChip(this)">Understand my lab results</button>
+      </div>
+      <div class="ai-input-row">
+        <input class="ai-text-input" id="ai-input" placeholder="Type anything..." onkeydown="if(event.key==='Enter') sendAiMsg()" />
+        <button class="ai-send-btn" onclick="sendAiMsg()">➤</button>
+      </div>
+      <div class="ai-disclaimer">ⓘ This AI provides informational guidance and does not replace professional medical diagnosis.</div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><div class="logo-icon" style="width:28px;height:28px;border-radius:6px;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg></div>MediBridge</div>
+      <nav class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support Center</a><a href="#">Contact</a></nav>
+      <span class="footer-copy">&copy; 2026 MediBridge Healthcare. Calm &amp; Trusted Care.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── Page navigation
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (target) { target.classList.add('active'); window.scrollTo(0,0); }
+  }
+
+  // ── Mobile nav
+  function toggleNav() {
+    document.querySelectorAll('.nav-links').forEach(n => n.classList.toggle('open'));
+  }
+  function closeNav() {
+    document.querySelectorAll('.nav-links').forEach(n => n.classList.remove('open'));
+  }
+
+  // ── FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── Filter tabs
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tab.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // ── AI chat
+  const aiResponses = {
+    "i don't feel well": "I'm sorry to hear that. Can you describe your symptoms in more detail? For example, do you have a fever, headache, nausea, or pain somewhere specific? The more detail you share, the better I can guide you.",
+    "medication information": "I can help with general medication information — dosage guidance, common side effects, and interactions. Please note I cannot prescribe medications. What medication would you like to know about?",
+    "appointment help": "I'm happy to help you prepare for your appointment! I can give you tips on what to bring, questions to ask your doctor, how to reschedule, or how to prepare for specific tests. What do you need?",
+    "understand my lab results": "Lab results can be confusing! Common ones include CBC (blood count), metabolic panels, and cholesterol levels. Which specific result would you like explained? Remember your doctor is the best person to interpret results for your specific situation.",
+  };
+  const fallbackResponses = [
+    "Thank you for sharing that. Could you tell me a little more so I can help you better?",
+    "I understand. Based on what you've described, it might be worth speaking with a healthcare professional. Is there anything specific I can help clarify?",
+    "That's helpful context. I'd recommend monitoring your symptoms and consulting your doctor if they worsen. Can I help with anything else?",
+    "I hear you. While I can provide general guidance, please always consult your doctor for medical decisions. What else can I help with?",
+  ];
+  let fallbackIndex = 0;
+
+  function sendChip(btn) {
+    const text = btn.textContent;
+    addUserMsg(text);
+    const key = text.toLowerCase();
+    const response = aiResponses[key] || 'Thank you for reaching out. Could you tell me more so I can help you better?';
+    setTimeout(() => addAiMsg(response), 600);
+  }
+
+  function sendAiMsg() {
+    const input = document.getElementById('ai-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addUserMsg(text);
+    input.value = '';
+    setTimeout(() => addAiMsg('Thank you for sharing that. Based on what you\'ve described, I\'d recommend speaking with a healthcare professional. In the meantime, is there anything specific I can help clarify?'), 700);
+  }
+
+  function addUserMsg(text) {
+    const msgs = document.getElementById('ai-messages');
+    const div = document.createElement('div');
+    div.style.textAlign = 'right';
+    div.innerHTML = `<div class="user-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function addAiMsg(text) {
+    const msgs = document.getElementById('ai-messages');
+    const div = document.createElement('div');
+    div.className = 'ai-msg-row';
+    div.innerHTML = `<div class="ai-avatar">🏥</div><div class="ai-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Newsletter
+  document.querySelectorAll('.btn-subscribe').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      if (input && input.value.trim()) {
+        btn.textContent = '✓ Subscribed!';
+        btn.style.background = '#4ade80';
+        input.value = '';
+        setTimeout(() => { btn.textContent = 'Subscribe'; btn.style.background = ''; }, 3000);
+      }
+    });
+  });
+  </script>
+  <script src="assets/medibridge-api.js"></script>
+</body>
+</html>
